@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+</html>
+<link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" type="text/css">
+<head>
+    <title>Paper trading bot by Mahir Hussain</title>
+    <body>
+        <h1>Welcome to the paper trading bot</h1>
+        <h2>Current balance: ${{money}}</h2>
+
+        <form action="/buy-order" method="POST">
+            <label for="$BUY">Buy stock: </label>
+            <input type="Enter Ticker" id="buy" name="buy-stock"><br>
+            <label for="$UNITS">Unit amount: </label>
+            <input type="Units" id="quantity" name="quantity"><br>
+            <input type="submit" value="Submit">
+          </form>
+
+          <form action="/sell-order" method="POST">
+            <label for="$SELL">Sell stock: </label>
+            <input type="Enter Ticker" id="sell" name="sell-stock"><br>
+            <label for="$SELL">Unit amount: </label>
+            <input type="Enter Ticker" id="sell" name="quantity"><br>
+            <input type="submit" value="Submit">
+          </form>
+          
+          {%if buy or sell %}
+            <p>Submiited order</p>
+          {% endif %}
+    </body>
+</head>
