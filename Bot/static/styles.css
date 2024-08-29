@@ -1,0 +1,21 @@
+.heading {
+  margin-top: 5px;
+
+}
+body {
+  margin: 10px;
+  padding: 8px;
+}
+
+.buy {
+    position: absolute;
+    right: 300px; /* Distance from the right edge */
+    top: 230px; /* Distance from the top edge */
+    width: 300px; /* Adjust the width as needed */
+  }
+  .sell {
+    position: absolute;
+    right: 300px; /* Distance from the right edge */
+    top: 500px; /* Distance from the top edge */
+    width: 300px; /* Adjust the width as needed */
+  }
