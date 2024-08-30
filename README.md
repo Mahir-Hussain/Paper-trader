@@ -3,6 +3,8 @@
 
 Welcome to the **Paper Trading Bot** repository! This project is a web-based application that simulates stock trading without real financial risk.
 
+![Website](https://github.com/user-attachments/assets/0cac21cc-4176-4ffd-b6ac-1c9438bb2684)
+
 ## 🚀 Features
 
 - **Simulated Trading:** Buy and sell stocks using virtual money.
