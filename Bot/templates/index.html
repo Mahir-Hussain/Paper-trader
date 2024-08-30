@@ -9,6 +9,11 @@
     <link rel="icon" href="static/favicon.png">
 </head>
 <body>
+    {% for message in get_flashed_messages() %}
+    <div class="alert" role="alert">
+      {{message}}
+    {% endfor %}
+    </div>
     <h1 class="heading">Welcome to the paper trading bot</h1>
 
     <fieldset>
@@ -25,8 +30,10 @@
         {% for stock in tickers %}
           {% set stock_name = stock[0] %}
           {% set qty = stock[1] %}
+          {% set price = stock[2] %}
+          {% set value = stock[3] %}
           <li>
-            Ticker: {{ stock_name }} | Quantity {{ qty }} | Value: null
+            Ticker: {{ stock_name }} | Quantity {{ qty }} | Current price: {{price}} | Value: {{ value }}
           </li>
         {% endfor %}
       </ul>
@@ -45,6 +52,10 @@
             <input type="submit" value="Submit">
         </fieldset>
     </form>
+
+      <label class="info">
+        Created using Flask, Python, Matplotlib, and the Alpaca API with alpaca-py
+      </label>
 
     <form class="sell" action="/sell-order" method="POST">
         <fieldset>

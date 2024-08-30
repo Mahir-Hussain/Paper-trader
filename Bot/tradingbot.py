@@ -2,7 +2,6 @@ from alpaca.trading.client import TradingClient
 from alpaca.trading.requests import MarketOrderRequest
 from alpaca.trading.enums import OrderSide, TimeInForce
 from alpaca.trading.requests import GetPortfolioHistoryRequest
-from alpaca.common.enums import BaseURL
 from typing import Optional, List, Union
 from alpaca.trading.models import PortfolioHistory
 from alpaca.common import RawData
@@ -13,75 +12,101 @@ import datetime as dt
 
 import random
 import string
-import time
+import requests
 
 
 class trader:
     def __init__(self):
-        self.key = "XXX"
-        self.secret = "XXXX"
+        self.key = ""
+        self.secret = ""
         self.trading_client = TradingClient(self.key, self.secret)
         self.orders = 0
-        self.cash = 0
 
     def open_positions(self):
         position = self.trading_client.get_all_positions()
         ticker_names = []
         for positions in position:
-            ticker_names.append([positions.symbol, round(float(positions.qty), 2)])
+            qty = round(float(positions.qty), 2)
+            current_price = float(positions.current_price)
+            ticker_names.append(
+                [positions.symbol, qty, current_price, round(current_price * qty, 2)]
+            )
         return ticker_names
 
+    # ID is random but is appended with an incrementing value to show what run the software is on
     def id_generator(self, size=7, chars=string.ascii_uppercase + string.digits):
         self.orders = self.orders + 1
         return "".join(random.choice(chars) for _ in range(size)) + str(self.orders)
 
     def money(self):
-        self.cash = self.trading_client.get_account().cash
-        return self.cash
+        cash = self.trading_client.get_account().cash
+        return cash
 
     def stock_value(self):
         stock_value = self.trading_client.get_account().portfolio_value
-        stock_value = float(stock_value) - float(self.cash)
+        stock_value = float(stock_value) - float(self.money())
         return round(stock_value, 2)
 
-    def buy(self, ticker, units):
-        # preparing order
-        market_order_data = MarketOrderRequest(
-            symbol=ticker,
-            qty=units,
-            side=OrderSide.BUY,
-            time_in_force=TimeInForce.DAY,
-            client_order_id=self.id_generator(),
+    # Checks if ticker is valid OR returns ticker from company name
+    def get_ticker(self, company_name):
+        yfinance = "https://query2.finance.yahoo.com/v1/finance/search"
+        user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+        params = {"q": company_name, "quotes_count": 1, "country": "United Kingdom"}
+
+        res = requests.get(
+            url=yfinance, params=params, headers={"User-Agent": user_agent}
         )
-        # Market order
-        market_order = self.trading_client.submit_order(market_order_data)
-        return market_order
+        data = res.json()
+        try:
+            company_code = data["quotes"][0]["symbol"]
+            return company_code
+        except Exception:
+            return False
+
+    def buy(self, ticker, units=1):
+        valid = self.get_ticker(ticker)
+        if valid != False and float(units):
+            # Preparing order
+            market_order_data = MarketOrderRequest(
+                symbol=valid,  # if user enters company name instead of ticker get_ticker will return ticker
+                qty=float(units),
+                side=OrderSide.BUY,
+                time_in_force=TimeInForce.DAY,
+                client_order_id=self.id_generator(),
+            )
+            # Market order
+            try:
+                market_order = self.trading_client.submit_order(market_order_data)
+                return market_order.status
+            except Exception as error:
+                return error
+        else:
+            return "Either you entered invalid ticker or quantity"
 
     def sell(self, ticker, units=1):
-        # preparing order
-        market_order_data = MarketOrderRequest(
-            symbol=ticker,
-            qty=units,
-            side=OrderSide.SELL,
-            time_in_force=TimeInForce.DAY,
-            client_order_id=self.id_generator(),
-        )
-        # Market order
-        market_order = self.trading_client.submit_order(order_data=market_order_data)
-        return market_order
+        # Check if valid ticker
+        valid = self.get_ticker(ticker)
+        if valid != False and float(units):
+            # preparing order
+            market_order_data = MarketOrderRequest(
+                symbol=valid,
+                qty=float(units),
+                side=OrderSide.SELL,
+                time_in_force=TimeInForce.DAY,
+                client_order_id=self.id_generator(),
+            )
+            # Market order
+            try:
+                market_order = self.trading_client.submit_order(market_order_data)
+                return market_order.status
+            except Exception as error:
+                return error
+        else:
+            return "Either you entered invalid ticker or quantity"
 
     def get_portfolio_history(
         self, filter: Optional[GetPortfolioHistoryRequest] = None
     ) -> Union[PortfolioHistory, RawData]:
-        """
-        Gets the portfolio history statistics.
-
-        Args:
-            filter (Optional[GetPortfolioHistoryRequest]): The parameters to filter the history with.
-
-        Returns:
-            PortfolioHistory: The portfolio history statistics for the account.
-        """
         # checking to see if we specified at least one param
         params = filter.to_request_fields() if filter else {}
 
@@ -123,6 +148,3 @@ class trader:
 
         # Save the figure
         plt.savefig("Bot/static/graph.png", bbox_inches="tight")
-
-        # Optionally show the plot if you're testing locally
-        # plt.show()
