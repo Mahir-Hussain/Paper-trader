@@ -17,8 +17,8 @@ import requests
 
 class trader:
     def __init__(self):
-        self.key = ""
-        self.secret = ""
+        self.key = "1"
+        self.secret = "1"
         self.trading_client = TradingClient(self.key, self.secret)
         self.orders = 0
 
@@ -77,7 +77,7 @@ class trader:
             # Market order
             try:
                 market_order = self.trading_client.submit_order(market_order_data)
-                return market_order.status
+                return str(market_order.status)
             except Exception as error:
                 return error
         else:
@@ -98,7 +98,7 @@ class trader:
             # Market order
             try:
                 market_order = self.trading_client.submit_order(market_order_data)
-                return market_order.status
+                return str(market_order.status)
             except Exception as error:
                 return error
         else:
@@ -147,4 +147,4 @@ class trader:
         plt.grid(True)
 
         # Save the figure
-        plt.savefig("Bot/static/graph.png", bbox_inches="tight")
+        plt.savefig("app/static/graph.png", bbox_inches="tight")

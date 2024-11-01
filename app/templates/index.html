@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paper trader</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles.css') }}">
+    <link rel="icon" href="static/favicon.png">
+</head>
+<body>
+<!-- Top Navigation Bar -->
+<header class="top-bar">
+  <div class="menu-icon">
+      ☰ Welcome to the paper trader
+  </div>
+</header>
+
+    {% for message in get_flashed_messages() %}
+    <div class="alert" role="alert">
+      {{message}}
+    {% endfor %}
+    </div>
+
+    <fieldset id="asset-list">
+      <legend id="info-box">Asset list</legend>
+      <ul>
+        <li>Cash balance: ${{money}}</li>
+        <li>Stock current value: ${{stock_value}}</li>
+      </ul>
+    </fieldset>
+
+    <fieldset id="stock-list">
+      <legend id="info-box">Current stock list</legend>
+      <div class="stock-headers">
+
+        <span>Ticker</span>
+        <span>Quantity</span>
+        <span>Current Price</span>
+        <span>Value</span>
+      </div>
+
+      <ul class="stock-list">
+        {% for stock in tickers %}
+          {% set stock_name = stock[0] %}
+          {% set qty = stock[1] %}
+          {% set price = stock[2] %}
+          {% set value = stock[3] %}
+          <li class="stock-item">
+            <span class="ticker">{{ stock_name }}</span>
+            <span class="quantity">{{ qty }}</span>
+            <span class="price">{{ price }}</span>
+            <span class="value">{{ value }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    </fieldset>
+
+    <div class="form">
+      <fieldset>
+          <legend>Buy or sell stock</legend>
+          <form action="/execute-order" method="POST">
+    
+          <label for="Ticker">Ticker symbol: </label>
+          <div class="input-group">
+              <input type="text" id="execute" name="execute"> <!-- Changed name to "execute" -->
+          </div>
+          
+          <label for="quantity">Unit amount: </label>
+          <div class="input-group">
+              <input type="number" id="quantity" name="quantity">
+          </div>
+    
+          <!-- Radio buttons for Buy and Sell -->
+          <div class="input-group">
+              <div class="checkbox-group">
+                  <input type="radio" id="Buy-ID" name="transaction" value="BUY">
+                  <label for="Buy-ID">Buy</label>
+              </div>
+              <div class="checkbox-group">
+                  <input type="radio" id="Sell-ID" name="transaction" value="SELL">
+                  <label for="Sell-ID">Sell</label>
+              </div>
+          </div>
+    
+          <input type="submit" value="Submit">
+          </form>
+      </fieldset>
+    </div>
+    
+
+  <img src="/static/graph.png" alt="Graph of assets">
+    </body>
+    </html>
+
+</body>
+</html>
