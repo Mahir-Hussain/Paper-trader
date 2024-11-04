@@ -3,7 +3,7 @@
 
 This project is a web-based application that simulates stock trading without real financial risk.
 
-![Website](https://github.com/user-attachments/assets/0cac21cc-4176-4ffd-b6ac-1c9438bb2684)
+![image](https://github.com/user-attachments/assets/ceb24f2f-ae83-45b5-af3a-56d269e8bc2d)
 
 ## 🚀 Features
 
