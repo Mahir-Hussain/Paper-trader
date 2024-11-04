@@ -24,7 +24,6 @@ body {
     font-size: 24px;
     color: #ffffff;
     cursor: pointer;
-    font-family: Arial, sans-serif;
 }
 
 #info-box {
@@ -41,7 +40,7 @@ body {
     margin: 20px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     position: relative;
-    transform: translate(750px, 160px);
+    transform: translate(750px, -40px);
     margin-top: -450px;
     border: none;
 }
@@ -188,7 +187,6 @@ legend {
 ul {
     list-style-type: none;
     padding: 0;
-    font-family: Arial, sans-serif;
 }
 
 li {
@@ -237,7 +235,7 @@ img {
     right: -750px;
     top: 220px;
     width: 500px;
-    transform: translateY(-130px);
+    transform: translateY(-350px);
     margin-bottom: 20px;
     border-radius: 8px;
 }

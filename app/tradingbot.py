@@ -34,7 +34,9 @@ class trader:
         return ticker_names
 
     # ID is random but is appended with an incrementing value to show what run the software is on
-    def id_generator(self, size=7, chars=string.ascii_uppercase + string.digits):
+    def id_generator(
+        self, size=7, chars=string.ascii_uppercase + "ORDER" + string.digits
+    ):
         self.orders = self.orders + 1
         return "".join(random.choice(chars) for _ in range(size)) + str(self.orders)
 

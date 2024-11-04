@@ -3,10 +3,11 @@ from tradingbot import trader
 
 
 class webviewer:
-    def __init__(self, host="192.168.0.17", port=5000):
+    def __init__(self, host="0.0.0.0", port=5000):
         self.app = Flask(__name__, template_folder="templates", static_folder="static")
         self.host = host
         self.port = port
+        self.app.secret_key = "A"
         # Handles trading component
         self.trader = trader()
         # Main page
